@@ -8,8 +8,7 @@ tokenizer = AutoTokenizer.from_pretrained(model_name)
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "mps" if torch.mps.is_available() else "cpu")
 
-# ✅ Load CSV
-df = pd.read_csv("../news-article-categories.csv")  # columns: article, title
+df = pd.read_csv("../news-article-categories.csv")
 dataset = Dataset.from_pandas(df).train_test_split(test_size=0.1)
 
 model_name = "facebook/bart-large-cnn"
