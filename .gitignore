@@ -1,0 +1,5 @@
+# Ignore the fine-tuned model weights
+**/model.safetensors
+
+# Ignore the optimizer state
+**/optimizer.pt
