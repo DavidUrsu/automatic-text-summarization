@@ -1,0 +1,7 @@
+pip install spacy
+python -m spacy download en_core_web_sm
+
+pip install pipeline
+pip install transformers
+pip install --upgrade jupyter ipywidgets
+pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cpu
