@@ -14,7 +14,8 @@ summary_ids = model.generate(
     inputs["input_ids"],
     max_length=64,
     num_beams=4,
-    early_stopping=True
+    early_stopping=True,
+    length_penalty=2.0,
 )
 
 generated_title = tokenizer.decode(summary_ids[0], skip_special_tokens=True)
