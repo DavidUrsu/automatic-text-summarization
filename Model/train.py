@@ -3,17 +3,16 @@ from transformers import AutoTokenizer, TrainingArguments, AutoModelForSeq2SeqLM
 import pandas as pd
 from datasets import Dataset
 
-model_name = "facebook/bart-large-cnn"
-tokenizer = AutoTokenizer.from_pretrained(model_name)
 
-device = torch.device("cuda:0" if torch.cuda.is_available() else "mps" if torch.mps.is_available() else "cpu")
 
 df = pd.read_csv("../news-article-categories.csv")
 dataset = Dataset.from_pandas(df).train_test_split(test_size=0.1)
 
-model_name = "facebook/bart-large-cnn"
+model_name = "t5-small"
 tokenizer = AutoTokenizer.from_pretrained(model_name)
 model = AutoModelForSeq2SeqLM.from_pretrained(model_name)
+
+device = torch.device("cuda:0" if torch.cuda.is_available() else "mps" if torch.mps.is_available() else "cpu")
 
 def preprocess(inputs):
     articles = inputs["body"]
@@ -28,7 +27,7 @@ training_args = TrainingArguments(
     output_dir="./title_model",
     per_device_train_batch_size=2,
     per_device_eval_batch_size=2,
-    num_train_epochs=10,
+    num_train_epochs=3,
     eval_strategy="epoch",
     save_strategy="epoch",
     logging_steps=10,

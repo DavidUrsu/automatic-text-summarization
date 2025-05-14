@@ -36,6 +36,7 @@ HTML_PAGE = """
     <select id="modelSelect">
         <option value="bart">Bart</option>
         <option value="t5">T5</option>
+        <option value="fine tunned">Fine Tunned</option>
         <option value="extractive">Extractive</option>
     </select>
     <button onclick="sendText()">Generate Title</button>

@@ -1,5 +1,5 @@
 import torch
-from transformers import AutoTokenizer, TrainingArguments, AutoModelForSeq2SeqLM, Trainer
+from transformers import AutoTokenizer, TrainingArguments, AutoModelForSeq2SeqLM, Trainer, AutoConfig
 import pandas as pd
 from datasets import Dataset
 import re
@@ -17,14 +17,18 @@ class ModelLLM:
             self.model_name = 't5-base'
             model = AutoModelForSeq2SeqLM.from_pretrained(self.model_name)
             self.tokenizer = AutoTokenizer.from_pretrained(self.model_name)
-        elif str(model_name).lower() == 'extractive':
-            pass
+        elif str(model_name).lower() == "fine tunned":
+            self.model_name = '../Model/title_model'
+            model = AutoModelForSeq2SeqLM.from_pretrained(self.model_name, local_files_only=True)
+            self.tokenizer = AutoTokenizer.from_pretrained(self.model_name, local_files_only=True)
+        else:
+            return
 
         self.model = model.to(self.device)
 
 
     def infer(self, text):
-        if "t5" in self.model_name:
+        if "t5" in self.model_name or 'fine' in self.model_name:
             text = "summarize: " + text
         inputs = self.tokenizer(text, truncation=True, return_tensors="pt", padding="max_length", max_length=512)
         if self.device != torch.device("mps"):
@@ -45,6 +49,8 @@ class ModelLLM:
         return summary
 
     def trim_to_sentence(self, text):
+        def capfirst(s):
+            return s[:1].upper() + s[1:]
         sentences = re.split(r'(?<=[.!?]) +', text)
         output = ""
         word_count = 0
@@ -59,7 +65,9 @@ class ModelLLM:
         sentences = output.split('. ')
         output = ""
         for sentence in sentences:
-            output += sentence.strip().capitalize() + '.'
+            t = sentence.strip().capitalize()
+            t = capfirst(t)
+            output += t + '.'
 
         return output.strip()
 
